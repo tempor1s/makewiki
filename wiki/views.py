@@ -1,5 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from wiki.models import Page
+
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
 
@@ -12,17 +13,24 @@ class PageList(ListView):
       3. Replace pass below with the code to render a template named `list.html`.
     """
     model = Page
+    template_name = 'wiki/list.html'
 
-    def get(self, request):
-        """ Returns a list of wiki pages. """
-        pass
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     print(context)
+    #     return context
+
+    # def get(self, request):
+    #     """ Returns a list of wiki pages. """
+    #     pages = Page.objects.all()
+    #     return render(request, 'wiki/list.html', context={'object_list': pages})
 
 
 class PageDetailView(DetailView):
     """
     CHALLENGES:
       1. On GET, render a template named `page.html`.
-      2. Replace this docstring with a description of what thos accomplishes.
+      2. Replace this docstring with a description of what this accomplishes.
 
     STRETCH CHALLENGES:
       1. Import the PageForm class from forms.py.
@@ -35,11 +43,13 @@ class PageDetailView(DetailView):
       5. After successfully editing a Page, use Django Messages to "flash" the user a success message
            - Message Content: REPLACE_WITH_PAGE_TITLE has been successfully updated.
     """
+    # TODO: get_slug_field
     model = Page
 
     def get(self, request, slug):
-        """ Returns a specific of wiki page by slug. """
-        pass
+        """ Returns a specific of wiki page by slug."""
+        page = get_object_or_404(Page, slug=slug)
+        return render(request, 'wiki/page.html', context={'page': page})
 
     def post(self, request, slug):
         pass
